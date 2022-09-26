@@ -1,0 +1,65 @@
+{{ '## ' + 'ovirt_exporter.service' }}
+{{ '# ' + ansible_managed }}
+{{ '# ' + 'Do not edit manually' }}
+
+{{ '[Unit]' }}
+{{ 'Description=ovirt_exporter' }}
+{{ 'After=network.target' }}
+{{ 'Wants=network.target' }}
+
+{{ '[Service]' }}
+{{ 'Type=simple' }}
+{{ 'User=nobody' }}
+{{ 'Group=nobody' }}
+{{ 'ExecStart=' + vars['ovirt_exporter_dest'] + '/ovirt_exporter' -}}
+{% if vars['ovirt_exporter_settings'] is defined and
+  vars['ovirt_exporter_settings'] != '' %}
+{% for o in vars['ovirt_exporter_settings'] %}
+{% if o.debug is defined and o.debug == 'true' %}
+{{ ' \\' }}
+{{ '  --debug' -}}
+{% endif %}
+{% if o.insecure is defined and o.insecure == 'true' %}
+{{ ' \\' }}
+{{ '  --api.insecure' -}}
+{% endif %}
+{% if o.url is defined and o.url != '' %}
+{{ ' \\' }}
+{{ '  --api.url=' + o.url -}}
+{% endif %}
+{% if o.username is defined and o.username != '' %}
+{{ ' \\' }}
+{{ '  --api.username=' ~ o.username -}}
+{% endif %}
+{% if o.password is defined and o.password != '' %}
+{{ ' \\' }}
+{{ '  --api.password=' ~ o.password -}}
+{% endif %}
+{% if o.listen_address is defined and o.listen_address != '' %}
+{{ ' \\' }}
+{{ '  --web.listen-address=' + o.listen_address -}}
+{% endif %}
+{% if o.telemetry_path is defined and o.telemetry_path != '' %}
+{{ ' \\' }}
+{{ '  --web.telemetry-path=' + o.telemetry_path -}}
+{% endif %}
+{% if o.with_snapshots is defined and o.with_snapshots in ['true', 'false'] %}
+{{ ' \\' }}
+{{ '  --with-snapshots=' + o.with_snapshots -}}
+{% endif %}
+{% if o.with_network is defined and o.with_network in ['true', 'false'] %}
+{{ ' \\' }}
+{{ '  --with-network=' + o.with_network -}}
+{% endif %}
+{% if o.with_disks is defined and o.with_disks in ['true', 'false'] %}
+{{ ' \\' }}
+{{ '  --with-disks=' + o.with_disks -}}
+{% endif %}
+{% if loop.last %}
+{{ '' }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{{ '[Install]' }}
+{{ 'WantedBy=multi-user.target' }}

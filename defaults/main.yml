@@ -1,0 +1,6 @@
+---
+ovirt_exporter_dest: '/opt/ovirt_exporter'
+ovirt_exporter_service: 'ovirt_exporter'
+ovirt_exporter_url:
+  'https://github.com/czerwonk/ovirt_exporter/releases/download'
+ovirt_exporter_arch: 'linux_amd64'

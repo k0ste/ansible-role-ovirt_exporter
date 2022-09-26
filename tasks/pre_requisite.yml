@@ -1,0 +1,33 @@
+---
+- name: "ovirt_exporter | Assert that system manager is systemd"
+  assert:
+    that:
+      - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
+    msg: "System manager is not systemd"
+    quiet: "true"
+- name: "ovirt_exporter | Set facts about ovirt_exporter role"
+  ansible.builtin.set_fact:
+    ovirt_exporter_version: "{{ hostvars[inventory_hostname]['ovirt_exporter'] |
+      community.general.json_query('[].version | [0]') | default(omit) }}"
+    ovirt_exporter_settings: "{{ hostvars[inventory_hostname]['ovirt_exporter'] |
+      community.general.json_query('[].settings[]') | default(omit) }}"
+- name: "ovirt_exporter | Get last release version from Github"
+  community.general.github_release:
+    user: "czerwonk"
+    repo: "ovirt_exporter"
+    action: "latest_release"
+  register: "ovirt_exporter_version_tag"
+  delegate_to: "localhost"
+  when:
+    - "vars['ovirt_exporter_version'] is defined"
+    - "vars['ovirt_exporter_version'] == 'latest'"
+- name: "ovirt_exporter | Set facts about ovirt_exporter role"
+  ansible.builtin.set_fact:
+    ovirt_exporter_version: "{{ vars['ovirt_exporter_version_tag']['tag'] }}"
+- name: "ovirt_exporter | Create ovirt_exporter catalog"
+  ansible.builtin.file:
+    path: "{{ vars['ovirt_exporter_dest'] }}"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"

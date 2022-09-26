@@ -1,0 +1,25 @@
+---
+- name: "ovirt_exporter | Deploy ovirt_exporter service configuration"
+  ansible.builtin.template:
+    src: "ovirt_exporter.service.j2"
+    dest: "{{ '/etc/systemd/system/' + vars['ovirt_exporter_service'] +
+      '.service' }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - "Daemon reload"
+    - "Restart ovirt_exporter"
+- name: "ovirt_exporter | Enable ovirt_exporter"
+  ansible.builtin.systemd:
+    name: "{{ vars['ovirt_exporter_service'] }}"
+    enabled: "yes"
+  when:
+    - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
+    - "hostvars[inventory_hostname]['ovirt_exporter'] != ''"
+    - "hostvars[inventory_hostname]['ovirt_exporter'] |
+       community.general.json_query(vars['ovirt_exporter_enable']) is defined"
+    - "hostvars[inventory_hostname]['ovirt_exporter'] |
+       community.general.json_query(vars['ovirt_exporter_enable']) == 'true'"
+  vars:
+    ovirt_exporter_enable: "[] | map(&enable || 'false', @) | [0]"

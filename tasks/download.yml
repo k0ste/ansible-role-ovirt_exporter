@@ -1,0 +1,12 @@
+---
+- name: "ovirt_exporter | Download & unarchive exporter binary from tarball"
+  ansible.builtin.unarchive:
+    src: "{{ vars['ovirt_exporter_url'] + '/' + vars['ovirt_exporter_version'] +
+      '/ovirt_exporter_' + vars['ovirt_exporter_version'] + '_' +
+      vars['ovirt_exporter_arch'] + '.tar.gz' }}"
+    dest: "{{ vars['ovirt_exporter_dest'] }}"
+    remote_src: "yes"
+    include: "ovirt_exporter"
+    mode: "0775"
+    owner: "root"
+    group: "root"
