@@ -16,6 +16,7 @@
     user: "czerwonk"
     repo: "ovirt_exporter"
     action: "latest_release"
+  run_once: "true"
   register: "ovirt_exporter_version_tag"
   delegate_to: "localhost"
   when:
