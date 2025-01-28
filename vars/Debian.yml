@@ -1,4 +1,8 @@
 ---
-ovirt_exporter_package:
+ovirt_exporter_dest: '/opt/ovirt_exporter'
+ovirt_exporter_bin: '/usr/bin/ovirt_exporter'
+ovirt_exporter_service: 'ovirt_exporter'
+ovirt_exporter_package: 'ovirt_exporter'
+ovirt_exporter_packages_deps:
   - 'unzip'
   - 'tar'
