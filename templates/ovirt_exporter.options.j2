@@ -3,7 +3,7 @@
 {{ '# Do not edit manually' }}
 
 {% if vars['ovirt_exporter_settings'] is defined and
-  vars['ovirt_exporter_settings'] != '' %}
+  vars['ovirt_exporter_settings'] not in ['', [], None] %}
 {% for o in vars['ovirt_exporter_settings'] %}
 {% if loop['first'] %}
 {{ 'OPTIONS=\"' -}}

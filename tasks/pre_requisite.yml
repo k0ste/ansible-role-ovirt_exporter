@@ -19,6 +19,9 @@
     ovirt_exporter_package_state:
       "{{ hostvars[inventory_hostname]['ovirt_exporter'] |
       community.general.json_query('[].package_state | [0]') | default(omit) }}"
+  when:
+    - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
+    - "hostvars[inventory_hostname]['ovirt_exporter'] not in ['', [], None]"
 - name: "ovirt_exporter | Assert that ovirt_exporter package state in
     valid value"
   ansible.builtin.assert:
@@ -29,15 +32,15 @@
     quiet: "true"
   when:
     - "vars['ovirt_exporter_package_state'] is defined"
-    - "vars['ovirt_exporter_package_state'] != []"
-    - "vars['ovirt_exporter_package_state'] != ''"
+    - "vars['ovirt_exporter_package_state'] not in ['', [], None]"
 - name: "ovirt_exporter | Set package state to 'present' cause value is not
     defined"
   ansible.builtin.set_fact:
     ovirt_exporter_package_state: "present"
   when:
     - "vars['ovirt_exporter_package_state'] is defined"
-    - "vars['ovirt_exporter_package_state'] == ''"
+    - "(vars['ovirt_exporter_package_state'] == '' or
+      vars['ovirt_exporter_package_state'] == None)"
 - name: "ovirt_exporter | Get last release version from Github"
   community.general.github_release:
     user: "czerwonk"
@@ -50,7 +53,7 @@
     - "vars['ovirt_exporter_version'] is defined"
     - "vars['ovirt_exporter_version'] == 'latest'"
     - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] != ''"
+    - "hostvars[inventory_hostname]['ovirt_exporter'] not in ['', [], None]"
     - "hostvars[inventory_hostname]['ovirt_exporter'] |
        community.general.json_query(vars['ovirt_exporter_install_package'])
        is defined"
@@ -77,7 +80,7 @@
     mode: "0755"
   when:
     - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] != ''"
+    - "hostvars[inventory_hostname]['ovirt_exporter'] not in ['', [], None]"
     - "hostvars[inventory_hostname]['ovirt_exporter'] |
        community.general.json_query(vars['ovirt_exporter_install_package'])
        is defined"

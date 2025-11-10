@@ -18,7 +18,7 @@
 {{ 'ExecStart=' + hostvars[inventory_hostname]['ovirt_exporter_dest'] +
   '/ovirt_exporter' -}}
 {% if vars['ovirt_exporter_settings'] is defined and
-  vars['ovirt_exporter_settings'] != '' %}
+  vars['ovirt_exporter_settings'] not in ['', [], None] %}
 {% for o in vars['ovirt_exporter_settings'] %}
 {% if o['debug'] is defined and o['debug'] == 'true' %}
 {{ ' \\' }}
