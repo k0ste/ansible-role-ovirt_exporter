@@ -1,19 +1,19 @@
 ---
-- name: "Daemon reload"
+- name: "ovirt_exporter | Daemon reload"
   ansible.builtin.systemd:
     daemon_reload: "yes"
-- name: "Restart ovirt_exporter"
+  listen: "Daemon reload"
+- name: "ovirt_exporter | Restart ovirt_exporter"
   ansible.builtin.systemd:
     name: "{{ hostvars[inventory_hostname]['ovirt_exporter_service'] }}"
     state: "restarted"
+  listen: "Restart ovirt_exporter"
   when:
     - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] not in ['', [], None]"
+    - "hostvars[inventory_hostname]['ovirt_exporter']
+      not in ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['ovirt_exporter'] |
-       community.general.json_query(vars['ovirt_exporter_restart']) is
-       defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] |
-       community.general.json_query(vars['ovirt_exporter_restart']) ==
-       'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+      'ovirt_exporter_restart', default='')) == 'true'"
   vars:
     ovirt_exporter_restart: "[] | map(&restart || 'false', @) | [0]"

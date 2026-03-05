@@ -2,9 +2,9 @@
 {{ '# ' + ansible_managed }}
 {{ '# Do not edit manually' }}
 
-{% if vars['ovirt_exporter_settings'] is defined and
-  vars['ovirt_exporter_settings'] not in ['', [], None] %}
-{% for o in vars['ovirt_exporter_settings'] %}
+{% if lookup('ansible.builtin.vars', 'ovirt_exporter_settings', default='')
+  not in ['', [], '[]', None] %}
+{% for o in lookup('ansible.builtin.vars', 'ovirt_exporter_settings') %}
 {% if loop['first'] %}
 {{ 'OVIRT_EXPORTER_ARGS=\"' -}}
 {% endif %}
@@ -14,19 +14,21 @@
 {% if o['insecure'] is defined and o['insecure'] == 'true' %}
 {{ ' --api.insecure' -}}
 {% endif %}
-{% if o['url'] is defined and o['url'] != '' %}
+{% if o['url'] is defined and o['url'] not in ['', [], '[]', None] %}
 {{ ' --api.url=' + o['url'] -}}
 {% endif %}
-{% if o['username'] is defined and o['username'] != '' %}
+{% if o['username'] is defined and o['username'] not in ['', [], '[]', None] %}
 {{ ' --api.username=' ~ o['username'] -}}
 {% endif %}
-{% if o['password'] is defined and o['password'] != '' %}
+{% if o['password'] is defined and o['password'] not in ['', [], '[]', None] %}
 {{ ' --api.password=' ~ o['password'] -}}
 {% endif %}
-{% if o['listen_address'] is defined and o['listen_address'] != '' %}
+{% if o['listen_address'] is defined and o['listen_address']
+  not in ['', [], '[]', None] %}
 {{ ' --web.listen-address=' + o['listen_address'] -}}
 {% endif %}
-{% if o['telemetry_path'] is defined and o['telemetry_path'] != '' %}
+{% if o['telemetry_path'] is defined and o['telemetry_path']
+  not in ['', [], '[]', None] %}
 {{ ' --web.telemetry-path=' + o['telemetry_path'] -}}
 {% endif %}
 {% if o['with_snapshots'] is defined and o['with_snapshots'] in ['true',
@@ -45,5 +47,5 @@
 {% endif %}
 {% endfor %}
 {% else %}
-{{ 'OPTIONS=""' }}
+{{ 'OVIRT_EXPORTER_ARGS=\"\"' }}
 {% endif %}
