@@ -7,13 +7,11 @@
     file: "packages.yml"
   when:
     - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] not in ['', [], None]"
+    - "hostvars[inventory_hostname]['ovirt_exporter']
+      not in ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['ovirt_exporter'] |
-       community.general.json_query(vars['ovirt_exporter_install_package'])
-       is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] |
-       community.general.json_query(vars['ovirt_exporter_install_package'])
-       == 'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+      'ovirt_exporter_install_package', default='')) == 'true'"
   vars:
     ovirt_exporter_install_package: "[] |
       map(&install_package || 'false', @) | [0]"
@@ -24,13 +22,11 @@
     file: "download.yml"
   when:
     - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] not in ['', [], None]"
+    - "hostvars[inventory_hostname]['ovirt_exporter']
+      not in ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['ovirt_exporter'] |
-       community.general.json_query(vars['ovirt_exporter_install_package'])
-       is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] |
-       community.general.json_query(vars['ovirt_exporter_install_package'])
-       == 'false'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+      'ovirt_exporter_install_package', default='')) == 'false'"
   vars:
     ovirt_exporter_install_package: "[] |
       map(&install_package || 'false', @) | [0]"

@@ -7,30 +7,35 @@
       "{{ hostvars[inventory_hostname]['ovirt_exporter_packages_deps'] }}"
 - name: "ovirt_exporter | Download & unarchive exporter binary from tarball"
   ansible.builtin.unarchive:
-    src: "{{ vars['ovirt_exporter_url'] + '/v' +
-      vars['ovirt_exporter_version'] + '/ovirt_exporter-' +
-      vars['ovirt_exporter_version'] + '.' + vars['ovirt_exporter_arch'] +
-      '.tar.gz' }}"
+    src: "{{ lookup('ansible.builtin.vars', 'ovirt_exporter_url') + '/v' +
+      lookup('ansible.builtin.vars', 'ovirt_exporter_version') +
+      '/ovirt_exporter-' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_version') + '.' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_arch') + '.tar.gz' }}"
     dest: "{{ hostvars[inventory_hostname]['ovirt_exporter_dest'] }}"
     remote_src: "yes"
-    include: "{{ 'ovirt_exporter-' + vars['ovirt_exporter_version'] +
-      '.' + vars['ovirt_exporter_arch'] + '/ovirt_exporter' }}"
+    include: "{{ 'ovirt_exporter-' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_version') + '.' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_arch') + '/ovirt_exporter' }}"
     mode: "0775"
     owner: "root"
     group: "root"
 - name: "ovirt_exporter | Move exporter binary arfter unarchive"
   ansible.builtin.command:
     cmd: "{{ 'mv ' + hostvars[inventory_hostname]['ovirt_exporter_dest'] +
-      '/ovirt_exporter-' + vars['ovirt_exporter_version'] + '.' +
-      vars['ovirt_exporter_arch'] + '/ovirt_exporter ' +
+      '/ovirt_exporter-' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_version') + '.' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_arch') + '/ovirt_exporter ' +
       hostvars[inventory_hostname]['ovirt_exporter_dest'] + '/' }}"
     removes: "{{ hostvars[inventory_hostname]['ovirt_exporter_dest'] +
-      '/ovirt_exporter-' + vars['ovirt_exporter_version'] + '.' +
-      vars['ovirt_exporter_arch'] + '/ovirt_exporter' }}"
+      '/ovirt_exporter-' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_version') + '.' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_arch') + '/ovirt_exporter' }}"
 - name: "ovirt_exporter | Deleting unnecessary directory"
   ansible.builtin.file:
     path: "{{ hostvars[inventory_hostname]['ovirt_exporter_dest'] +
-      '/ovirt_exporter-' + vars['ovirt_exporter_version'] + '.' +
-      vars['ovirt_exporter_arch'] }}"
+      '/ovirt_exporter-' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_version') + '.' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_arch') }}"
     state: "absent"
   diff: false

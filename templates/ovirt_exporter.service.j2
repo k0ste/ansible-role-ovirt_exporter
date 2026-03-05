@@ -4,8 +4,8 @@
 
 {{ '[Unit]' }}
 {{ 'Description=Prometheus oVirt engine exporter' }}
-{{ 'After=network.target network-online.target basic.target' }}
-{{ 'Wants=network-online.target' }}
+{{ 'After=network-online.target nss-lookup.target basic.target' }}
+{{ 'Wants=network-online.target nss-lookup.target' }}
 {{ 'StartLimitIntervalSec=30' }}
 {{ 'StartLimitBurst=3' }}
 

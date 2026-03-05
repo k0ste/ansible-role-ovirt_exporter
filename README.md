@@ -36,6 +36,6 @@ ovirt_exporter:
         with_snapshots: 'false'
         with_network: 'false'
         with_disks: 'false'
-        listen_address: ':9325'
+        listen_address: '127.0.0.1:9325'
         telemetry_path: '/metrics'
 ```

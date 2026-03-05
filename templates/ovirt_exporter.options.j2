@@ -6,7 +6,7 @@
   vars['ovirt_exporter_settings'] not in ['', [], None] %}
 {% for o in vars['ovirt_exporter_settings'] %}
 {% if loop['first'] %}
-{{ 'OPTIONS=\"' -}}
+{{ 'OVIRT_EXPORTER_ARGS=\"' -}}
 {% endif %}
 {% if o['debug'] is defined and o['debug'] == 'true' %}
 {{ ' --debug' -}}
