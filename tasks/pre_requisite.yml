@@ -19,18 +19,15 @@
       '.yml' }}"
 - name: "ovirt_exporter | Set facts about ovirt_exporter role"
   ansible.builtin.set_fact:
-    ovirt_exporter_version:
-      "{{ hostvars[inventory_hostname]['ovirt_exporter'] |
-      community.general.json_query('[].version | [0]')}}"
-    ovirt_exporter_settings:
-      "{{ hostvars[inventory_hostname]['ovirt_exporter'] |
-      community.general.json_query('[].settings | [0]') }}"
-    ovirt_exporter_package_state:
-      "{{ hostvars[inventory_hostname]['ovirt_exporter'] |
+    ovirt_exporter_version: "{{ lookup('ansible.builtin.vars',
+      'ovirt_exporter') | community.general.json_query('[].version | [0]') }}"
+    ovirt_exporter_settings: "{{ lookup('ansible.builtin.vars',
+      'ovirt_exporter') | community.general.json_query('[].settings | [0]') }}"
+    ovirt_exporter_package_state: "{{ lookup('ansible.builtin.vars',
+      'ovirt_exporter') |
       community.general.json_query('[].package_state | [0]') }}"
   when:
-    - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter']
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter', default='')
       not in ['', [], '[]', None]"
 - name: "ovirt_exporter | Assert that ovirt_exporter package state in
     valid value"
@@ -63,10 +60,9 @@
   when:
     - "lookup('ansible.builtin.vars', 'ovirt_exporter_version',
       default='') == 'latest'"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter']
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter', default='')
       not in ['', [], '[]', None]"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] |
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter') |
        community.general.json_query(lookup('ansible.builtin.vars',
       'ovirt_exporter_install_package', default='')) == 'false'"
   vars:
@@ -84,16 +80,15 @@
       'ovirt_exporter_version_tag')['skipped']"
 - name: "ovirt_exporter | Create ovirt_exporter catalog"
   ansible.builtin.file:
-    path: "{{ hostvars[inventory_hostname]['ovirt_exporter_dest'] }}"
+    path: "{{ lookup('ansible.builtin.vars', 'ovirt_exporter_dest') }}"
     state: "directory"
     owner: "root"
     group: "root"
     mode: "0755"
   when:
-    - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter']
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter', default='')
       not in ['', [], '[]', None]"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] |
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter') |
        community.general.json_query(lookup('ansible.builtin.vars',
       'ovirt_exporter_install_package', default='')) == 'false'"
   vars:

@@ -6,25 +6,23 @@
   ansible.builtin.include_tasks:
     file: "packages.yml"
   when:
-    - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter']
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter', default='')
       not in ['', [], '[]', None]"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] |
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter') |
        community.general.json_query(lookup('ansible.builtin.vars',
       'ovirt_exporter_install_package', default='')) == 'true'"
   vars:
     ovirt_exporter_install_package: "[] |
       map(&install_package || 'false', @) | [0]"
-    ovirt_exporter_pacakges_variant:
-      "{{ hostvars[inventory_hostname]['ovirt_exporter_package'] }}"
+    ovirt_exporter_pacakges_variant: "{{ lookup('ansible.builtin.vars',
+      'ovirt_exporter_package') }}"
 - name: "ovirt_exporter | Include packages tasks [not package deployment]"
   ansible.builtin.include_tasks:
     file: "download.yml"
   when:
-    - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter']
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter', default='')
       not in ['', [], '[]', None]"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] |
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter') |
        community.general.json_query(lookup('ansible.builtin.vars',
       'ovirt_exporter_install_package', default='')) == 'false'"
   vars:

@@ -7,10 +7,9 @@
     group: "root"
     mode: "0644"
   when:
-    - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter']
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter', default='')
       not in ['', [], '[]', None]"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] |
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter') |
        community.general.json_query(lookup('ansible.builtin.vars',
       'ovirt_exporter_install_package', default='')) == 'true'"
   vars:
@@ -21,16 +20,15 @@
 - name: "ovirt_exporter | Deploy ovirt_exporter service configuration"
   ansible.builtin.template:
     src: "ovirt_exporter.service.j2"
-    dest: "{{ '/etc/systemd/system/' +
-      hostvars[inventory_hostname]['ovirt_exporter_service'] + '.service' }}"
+    dest: "{{ '/etc/systemd/system/' + lookup('ansible.builtin.vars',
+      'ovirt_exporter_service') + '.service' }}"
     owner: "root"
     group: "root"
     mode: "0644"
   when:
-    - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter']
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter', default='')
       not in ['', [], '[]', None]"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] |
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter') |
        community.general.json_query(lookup('ansible.builtin.vars',
       'ovirt_exporter_install_package', default='')) == 'false'"
   vars:
@@ -41,13 +39,12 @@
     - "Restart ovirt_exporter"
 - name: "ovirt_exporter | Enable ovirt_exporter"
   ansible.builtin.systemd:
-    name: "{{ hostvars[inventory_hostname]['ovirt_exporter_service'] }}"
+    name: "{{ lookup('ansible.builtin.vars', 'ovirt_exporter_service') }}"
     enabled: "yes"
   when:
-    - "hostvars[inventory_hostname]['ovirt_exporter'] is defined"
-    - "hostvars[inventory_hostname]['ovirt_exporter']
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter', default='')
       not in ['', [], '[]', None]"
-    - "hostvars[inventory_hostname]['ovirt_exporter'] |
+    - "lookup('ansible.builtin.vars', 'ovirt_exporter') |
        community.general.json_query(lookup('ansible.builtin.vars',
       'ovirt_exporter_enable', default='')) == 'true'"
   vars:

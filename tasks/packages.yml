@@ -9,7 +9,8 @@
         update_cache: "yes"
     - name: "ovirt_exporter | Install package with dnf"
       ansible.builtin.dnf:
-        name: "{{ ovirt_exporter_pacakges_variant }}"
+        name: "{{ lookup('ansible.builtin.vars',
+          'ovirt_exporter_pacakges_variant') }}"
         state: "{{ lookup('ansible.builtin.vars',
           'ovirt_exporter_package_state') }}"
 - name: "ovirt_exporter | Install the required packages in Debian
@@ -22,7 +23,8 @@
         update_cache: "yes"
     - name: "ovirt_exporter | Install package with apt"
       ansible.builtin.apt:
-        name: "{{ ovirt_exporter_pacakges_variant }}"
+        name: "{{ lookup('ansible.builtin.vars',
+          'ovirt_exporter_pacakges_variant') }}"
         state: "{{ lookup('ansible.builtin.vars',
           'ovirt_exporter_package_state') }}"
 - name: "ovirt_exporter | Install the required packages in ArchLinux
@@ -36,6 +38,7 @@
         update_cache: "yes"
     - name: "ovirt_exporter | Install package with pacman"
       community.general.pacman:
-        name: "{{ ovirt_exporter_pacakges_variant }}"
+        name: "{{ lookup('ansible.builtin.vars',
+          'ovirt_exporter_pacakges_variant') }}"
         state: "{{ lookup('ansible.builtin.vars',
           'ovirt_exporter_package_state') }}"
